@@ -1,0 +1,118 @@
+body{
+  background-color: #0F2537;
+}
+
+.node {
+    margin: -1px !important;
+    padding: 0 !important;
+    width: 25px;
+    height: 25px;
+    outline: 2px solid #f8c298;
+    display: inline-block;
+    /* background-color: #FFFFFC; */
+    background-color: #F8F7FF;
+
+}
+
+.weight{
+  background-image: url("files/test.png");
+  background-size: contain; /* or background-size: cover; */
+  background-repeat: no-repeat;
+  width: 25px;
+  height: 25px;
+}
+
+/* E0CA3C FF6B6B FFE66D try as path or visited */
+.start{
+    background-image: url("files/house-solid.svg");
+    cursor: move;
+}
+
+.start:hover, .finish:hover{
+    transform: scale(1.1);
+}
+.finish{
+    background-image: url("files/flag-solid.svg");
+    cursor: move;
+}
+
+.wall{
+     /* background-color:rgba(99, 32, 238, 1); */
+    background-color: #6320EE;
+    opacity: 0.9;
+    animation: wallAnimation 0.4s ease-in-out;
+}
+
+@keyframes wallAnimation{
+    0%{
+    transform: scale(1);
+    }
+    50%{
+    transform: scale(1.3);
+    }
+    100%{
+    transform: scale(1);
+    }
+}
+/* 5E0035  290025 00CC66 */
+.visited{
+    background-color: rgba(0, 204, 102, 0.9);
+    animation-name: visitedAnimation;
+    animation-duration: 1s;
+}
+
+@keyframes visitedAnimation {
+    0% {
+      transform: scale(.3);
+      background-color: #F7AEF8;
+      border-radius: 100%;
+    }
+  
+    /* 25% {
+      transform: scale(.5);
+      background-color: #F7AEF8;
+      border-radius: 100%;
+    } */
+
+    50% {
+      transform: scale(.7);
+      background-color: #F84AA7;
+    }
+  
+    /* 75% {
+      transform: scale(1.2);
+      background-color: #F84AA7;
+    } */
+  
+    100% {
+      transform: scale(1.0);
+      background-color: #F84AA7;
+    }
+}
+  
+/*  0496FF FF6666 5E0035*/
+.shortestPath{
+    background-color: rgba(255, 51, 31, 0.8);
+    /* background-color: #FF331F;
+    opacity: 0.8;*/
+    border: 2px solid #FF331F;
+    animation-name: shortestPathAnimation;
+    animation-duration: 1s;
+  }
+
+@keyframes shortestPathAnimation {
+  0% {
+    transform: scale(.6);
+    background-color: #F6AA1C ;
+  }
+
+  50% {
+    transform: scale(1.2);
+    background-color: #F6AA1C;
+  }
+
+  100% {
+    transform: scale(1.0);
+    background-color: #5E0035;
+  }
+}
