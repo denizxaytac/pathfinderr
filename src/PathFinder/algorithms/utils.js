@@ -29,10 +29,9 @@ export function getNeighbors(grid, node, type){
     else if (type === "diagonal"){
         adjacents = [[1, 0], [0, -1], [0, 1], [-1, 0]];
     }
-    else if (type === "distance"){
+    else if (type === "distance"){ // calculating frontier cells for prim
         adjacents = [[2, 0], [0, -2], [0, 2], [-2, 0]];
     }
-
     adjacents.forEach(item => {
         let newRow = node.row + item[0];
         let newCol = node.col + item[1];
