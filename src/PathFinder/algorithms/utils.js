@@ -102,9 +102,17 @@ export function calculateGScore(currNode, endNode) {
 }
 
 
-const createArrayRange = (start, stop, step) =>
+export const createArrayRange = (start, stop, step) =>
     Array.from(
     { length: (stop - start) / step + 1 },
     (value, index) => start + index * step
-    );
+);
 
+export function check2DArrayContains(array, element) {
+    // element is a 2d array
+    return array.some(subArray => JSON.stringify(subArray) === JSON.stringify(element));
+}
+
+export function randomRange(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;  
+}
