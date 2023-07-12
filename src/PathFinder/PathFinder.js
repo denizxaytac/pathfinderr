@@ -10,7 +10,7 @@ import djikstra from "./algorithms/djikstra.js";
 import aStar from "./algorithms/aStar";
 import depthFirst from "./algorithms/depthFirst.js";
 import breadthFirst from "./algorithms/breadthFirst.js";
-//import jumpPointSearch from "./algorithms/jumpPointSearch.js";
+import jumpPointSearch from "./algorithms/jumpPointSearch.js";
 // maze algorithms
 import randomizedPrim from "./algorithms/randomizedPrim.js";
 import recursiveDivision from "./algorithms/recursiveDivision.js";
@@ -208,9 +208,9 @@ export default function PathFinder(){
       else if(algorithm === "Breadth-First"){
         [visited, path] = breadthFirst(grid, startPos.current, finishPos.current);
       }
-      // else if(algorithm === "Jump-Point"){
-      //   [visited, path] = jumpPointSearch(grid, startPos.current, finishPos.current);
-      // }
+      else if(algorithm === "Jump-Point"){
+        [visited, path] = jumpPointSearch(grid, startPos.current, finishPos.current);
+      }
       animateVisited(visited, path, () => {
         animateShortestPath(path);
         setStatus("none");

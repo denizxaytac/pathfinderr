@@ -1,13 +1,12 @@
 # Pathfinding algoritms
- - Djikstra
+- Djikstra
 - A* Star
 - Jump Point Search (an optimized version of A* star for uniform cost grids) # TODO
 - Depth-First
 - Breadth-First
-# Maze algorithms
 
- - List item
-- Randomized Prim # TODO
+# Maze algorithms
+- Randomized Prim
 - Recursive Division 
 - Stair Walls
 - Random Walls(Uniform/Weighted)
