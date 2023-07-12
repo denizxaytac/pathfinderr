@@ -9,7 +9,6 @@ body{
     height: 25px;
     outline: 2px solid #f8c298;
     display: inline-block;
-    /* background-color: #FFFFFC; */
     background-color: #F8F7FF;
 
 }
@@ -22,7 +21,6 @@ body{
   height: 25px;
 }
 
-/* E0CA3C FF6B6B FFE66D try as path or visited */
 .start{
     background-image: url("files/house-solid.svg");
     cursor: move;
@@ -37,7 +35,6 @@ body{
 }
 
 .wall{
-     /* background-color:rgba(99, 32, 238, 1); */
     background-color: #6320EE;
     opacity: 0.9;
     animation: wallAnimation 0.4s ease-in-out;
@@ -54,7 +51,8 @@ body{
     transform: scale(1);
     }
 }
-/* 5E0035  290025 00CC66 */
+
+
 .visited{
     background-color: rgba(0, 204, 102, 0.9);
     animation-name: visitedAnimation;
@@ -62,40 +60,30 @@ body{
 }
 
 @keyframes visitedAnimation {
-    0% {
-      transform: scale(.3);
-      background-color: #F7AEF8;
-      border-radius: 100%;
-    }
-  
-    /* 25% {
-      transform: scale(.5);
-      background-color: #F7AEF8;
-      border-radius: 100%;
-    } */
+  0% {
+    transform: scale(0.3);
+    background-color: #000042bf;
+    border-radius: 100%;
+  }
 
-    50% {
-      transform: scale(.7);
-      background-color: #F84AA7;
-    }
-  
-    /* 75% {
-      transform: scale(1.2);
-      background-color: #F84AA7;
-    } */
-  
-    100% {
-      transform: scale(1.0);
-      background-color: #F84AA7;
-    }
+  50% {
+    background-color: #d911bbbf;
+  }
+
+  75% {
+    transform: scale(1.2);
+    background-color: #2211d9bf;
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: #00da45bf;
+  }
 }
   
-/*  0496FF FF6666 5E0035*/
 .shortestPath{
-    background-color: rgba(255, 51, 31, 0.8);
-    /* background-color: #FF331F;
-    opacity: 0.8;*/
-    border: 2px solid #FF331F;
+    background-color: #FFF275;
+    border: 2px solid #F6AA1C;
     animation-name: shortestPathAnimation;
     animation-duration: 1s;
   }
@@ -113,6 +101,6 @@ body{
 
   100% {
     transform: scale(1.0);
-    background-color: #5E0035;
+    background-color: #F6AA1C;
   }
 }
