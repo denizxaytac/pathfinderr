@@ -10,30 +10,23 @@ const expanded = [];
 const visited = [];
 
 
-function addToVisit(grid, pos){
-    if (typeof pos === "object"){
-        // First position
-        var xPos = pos[0];
-        var yPos = pos[1];
-        var currNode = grid[xPos][yPos];
-        currNode.f = utils.getEcludianDistance(currNode, FINISH_NODE);
-        toVisit.enqueue(currNode);
-    
-        // Second Position
-        var xPos2 = pos[2];
-        var yPos2 = pos[3];
-        var nextNode = grid[xPos2][yPos2];
-        if (nextNode.nodeType === "finish"){
-            nextNode.f = 0;
-            toVisit.enqueue(nextNode);
-            return true;
-        }
-        else{
-            nextNode.f = currNode.f +1;
-            toVisit.enqueue(nextNode);
-        }
+function addToVisit(grid, xPos, yPos, xPos2, yPos2){
+    // First position
+    var currNode = grid[xPos][yPos];
+    currNode.f = utils.getEcludianDistance(currNode, FINISH_NODE);
+    toVisit.enqueue(currNode);
+
+    // Second Position
+    var nextNode = grid[xPos2][yPos2];
+    if (nextNode.nodeType === "finish"){
+        nextNode.f = 0;
+        toVisit.enqueue(nextNode);
     }
-    return false;
+    else{
+        nextNode.f = currNode.f +1;
+        toVisit.enqueue(nextNode);
+    }
+    
 }
 
 export default function jumpPointSearch(grid, startPos, finishPos){
@@ -53,25 +46,18 @@ export default function jumpPointSearch(grid, startPos, finishPos){
             return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
         }
 
-        // horizontal-vertical pruning
-        if (addToVisit(grid, straightPrune(grid, currNode, -1, 0)))
-            return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
-        if (addToVisit(grid, straightPrune(grid, currNode, 0, -1)))
-        return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
-        if (addToVisit(grid, straightPrune(grid, currNode, 1, 0)))
-            return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
-        if (addToVisit(grid, straightPrune(grid, currNode, 0, 1)))
-            return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
+        // horizontal/vertical pruning
+        straightPrune(grid, currNode, -1, 0);
+        straightPrune(grid, currNode, 0, -1);
+        straightPrune(grid, currNode, 1, 0);
+        straightPrune(grid, currNode, 0, 1);
+            
 
         // Diagonal pruning
-        if (addToVisit(grid, diagonalPrune(grid, currNode, -1, -1)))
-            return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
-        if (addToVisit(grid, diagonalPrune(grid, currNode, 1, -1)))
-            return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
-        if (addToVisit(grid, diagonalPrune(grid, currNode, 1, 1)))
-            return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
-        if (addToVisit(grid, diagonalPrune(grid, currNode, -1, 1)))
-            return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
+        diagonalPrune(grid, currNode, -1, -1);
+        diagonalPrune(grid, currNode, 1, -1); 
+        diagonalPrune(grid, currNode, 1, 1);
+        diagonalPrune(grid, currNode, -1, 1);
     }
     return [expanded.slice(1), []];
 }
@@ -92,7 +78,7 @@ function straightPrune(grid, startNode, stepX, stepY){
         console.log("Straight Prune=>", [newRow, newCol], stepX, stepY);
         if (currNode.nodeType === "finish"){
             console.log("found finish");
-            return [startNode.row, startNode.col, currNode.row, currNode.col];
+            addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
         }
         if (expanded.includes(currNode)){
             return;
@@ -104,13 +90,13 @@ function straightPrune(grid, startNode, stepX, stepY){
             // check for below
             if (grid[newRow + 1]?.[newCol]?.nodeType === "wall" && grid[newRow + 1]?.[newCol + stepY]?.nodeType !== "wall"){
                 console.log("stepX=0 returning", newRow + 1, newCol + stepY);
-                return [startNode.row, startNode.col, currNode.row, currNode.col];
+                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
 
             }
             // check for above
             if (grid[newRow - 1]?.[newCol]?.nodeType === "wall" && grid[newRow - 1][newCol + stepY]?.nodeType !== "wall"){
                 console.log("stepX=0 returning", newRow + 1, newCol + stepY);
-                return [startNode.row, startNode.col, currNode.row, currNode.col];
+                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
             }
             
         }
@@ -118,12 +104,12 @@ function straightPrune(grid, startNode, stepX, stepY){
             // check for right
             if (grid[newRow]?.[newCol + 1]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol + 1]?.nodeType !== "wall"){
                 console.log("stepY=0 returning",  [newRow, newCol + 1]);
-                return [startNode.row, startNode.col, currNode.row, currNode.col];
+                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
             }
             // check for left
             if (grid[newRow]?.[newCol - 1]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol - 1]?.nodeType !== "wall"){
                 console.log("stepY=0 returning",  [newRow, newCol - 1]);
-                return [startNode.row, startNode.col, currNode.row, currNode.col];
+                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
 
             }
         }
@@ -147,7 +133,7 @@ function diagonalPrune(grid, startNode, stepX, stepY){
             console.log("Vertical Prune=>", [newRow, newCol], stepX, stepY);
             if (currNode.nodeType === "finish"){
                 console.log("found finish");
-                return [startNode.row, startNode.col, currNode.row, currNode.col];
+                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
             }
             if (expanded.includes(currNode)){
                 return;
@@ -156,20 +142,17 @@ function diagonalPrune(grid, startNode, stepX, stepY){
         // forced neighbor checking
         if (grid[newRow + stepX]?.[newCol]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol + stepY]?.nodeType !== "wall"){
             console.log("diag1 returning", [newRow + stepX, newCol + stepY]);
-            return [startNode.row, startNode.col, currNode.row, currNode.col];
+            addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
         }
         else{
-            if (addToVisit(grid, straightPrune(grid, grid[newRow][newCol], stepX, 0)))
-                return true;
+            straightPrune(grid, grid[newRow][newCol], stepX, 0);
         }
         if (grid[newRow]?.[newCol + stepY]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol + stepY]?.nodeType !== "wall"){
             console.log("diag2 returning", [newRow + stepX, newCol + stepY]);
-            return [startNode.row, startNode.col, currNode.row, currNode.col];
+            addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
         }
         else{
-            if (addToVisit(grid, straightPrune(grid, grid[newRow][newCol], 0, stepY))){
-                return true;
-            }
+            straightPrune(grid, grid[newRow][newCol], 0, stepY);
         }
     }
 }
