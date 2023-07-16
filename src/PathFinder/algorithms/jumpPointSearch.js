@@ -1,13 +1,13 @@
 import * as utils from './utils.js';
 
-const toVisit = new utils.PriorityQueue((a, b) => a.g - b.g);
+var toVisit = new utils.PriorityQueue((a, b) => a.g - b.g);
 
 
 var MAX_ROW = 0;
 var MAX_COL = 0;
 var FINISH_NODE = null;
-const expanded = [];
-const visited = [];
+var expanded = [];
+var visited = [];
 
 
 function addToVisit(grid, xPos, yPos, xPos2, yPos2){
@@ -32,7 +32,10 @@ export default function jumpPointSearch(grid, startPos, finishPos){
     MAX_ROW = grid.length;
     MAX_COL = grid[0].length;
     FINISH_NODE = finishPos;
-    let [distances, paths] = utils.getInitialDistances(grid, startPos);
+    expanded = [];
+    visited = [];
+    toVisit = new utils.PriorityQueue((a, b) => a.g - b.g);
+    console.log(toVisit);
     grid[startPos.row][startPos.col].g = 0;
     grid[startPos.row][startPos.col].f = utils.getEcludianDistance(grid[startPos.row][startPos.col], grid[finishPos.row][finishPos.col]);
     toVisit.enqueue(grid[startPos.row][startPos.col]);
@@ -44,7 +47,7 @@ export default function jumpPointSearch(grid, startPos, finishPos){
         //console.log("Current node", currNode);
         if (currNode.nodeType === "finish"){
             //console.log("returning", visited);
-            return [visited.slice(1), utils.reconstructPath(paths, startPos, finishPos)];
+            return [expanded, visited];
         }
 
         // horizontal/vertical pruning
@@ -68,7 +71,7 @@ export default function jumpPointSearch(grid, startPos, finishPos){
             }
         }
     }
-    return [expanded.slice(1), []];
+    return [expanded, []];
 }
 
 function straightPrune(grid, startNode, stepX, stepY){
@@ -95,7 +98,7 @@ function straightPrune(grid, startNode, stepX, stepY){
         expanded.push(currNode);
         
         // forced neighbor checking
-        if (stepX == 0){
+        if (stepX === 0){
             // check for below
             if (grid[newRow + 1]?.[newCol]?.nodeType === "wall" && grid[newRow + 1]?.[newCol + stepY]?.nodeType !== "wall"){
                 //console.log("stepX=0 returning", newRow + 1, newCol + stepY);
@@ -111,7 +114,7 @@ function straightPrune(grid, startNode, stepX, stepY){
             }
             
         }
-        else if (stepY == 0){
+        else if (stepY === 0){
             // check for right
             if (grid[newRow]?.[newCol + 1]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol + 1]?.nodeType !== "wall"){
                 //console.log("stepY=0 returning",  [newRow, newCol + 1]);

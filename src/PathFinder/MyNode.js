@@ -3,6 +3,7 @@ import React from 'react';
 
 function MyNode({row, col, nodeType, handleMouseDown, handleMouseUp, handleMouseEnter, handleMouseLeave, handleContextMenu}){
     return <td
+    id ={`${row}-${col}`} 
     className={`node ${nodeType}`} 
     onMouseDown={e => handleMouseDown(e, row, col, nodeType)}
     onMouseUp={e => handleMouseUp(e)}

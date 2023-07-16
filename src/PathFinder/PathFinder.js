@@ -149,6 +149,61 @@ export default function PathFinder(){
       }, 5);
     }, []);
     
+    const animatePrune = useCallback((visited, path, callback) => {
+      let i = 0;
+      const intervalId = setInterval(() => {
+        setGrid(currGrid => {
+          const newGrid = currGrid.map(row => [...row]);
+          if (i < visited.length) {
+            const node = visited[i];
+            if (node.nodeType !== "finish" && node.nodeType !== "start") {
+                if (path.includes(node)){
+                  newGrid[node.row][node.col].nodeType = "visited";
+                }
+                else{
+                  newGrid[node.row][node.col].nodeType = "pruned";
+                }
+            }
+            i++;
+          } else {
+            clearInterval(intervalId);
+            if (typeof callback === "function") {
+              callback();
+            }
+            // required for animateShortestPath to run after animateVisited
+          }
+          return newGrid;
+        });
+      }, 5);
+    }, []);
+
+    const animateJump = (path) => {
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      var node = document.getElementById("0-0");
+      var elementRef = node.getBoundingClientRect();
+      const left = elementRef.left;
+      const top = elementRef.top;
+      var idx = 0;
+      var currNodeIndex = path[idx].row + '-' + path[idx].col;
+      var currNode = document.getElementById(currNodeIndex);
+      while (idx < path.length){
+        var startElementRef = currNode.getBoundingClientRect();
+
+        ctx.beginPath();
+        ctx.moveTo(startElementRef.x + 12.5, (startElementRef.y - top) + 12.5);
+
+        var finishNodeIndex = path[idx].row + '-' + path[idx].col;
+        var finishNode = document.getElementById(finishNodeIndex);
+        idx += 1;
+        currNode = finishNode;
+        var finishElementRef = finishNode.getBoundingClientRect();
+
+        ctx.lineTo(finishElementRef.x + 12.5, (finishElementRef.y - top) + 12.5);
+        ctx.stroke();
+    };
+    }
     const animateShortestPath = useCallback((path) => {
       let i = 0;
       const intervalId = setInterval(() => {
@@ -179,8 +234,13 @@ export default function PathFinder(){
       const newGrid = [...grid];
       newGrid.map((row) =>
         row.map((node) => {
-          if (node.nodeType === 'visited' || node.nodeType === 'shortestPath') {
-            node.nodeType = "normal";
+          if (node.nodeType === 'visited'
+            || node.nodeType === 'shortestPath'
+            || node.nodeType === "pruned") {
+              node.nodeType = "normal";
+              const canvas = document.getElementById("canvas");
+              const context = canvas.getContext('2d');
+              context.clearRect(0, 0, canvas.width, canvas.height);
           }
         })
       );
@@ -211,10 +271,21 @@ export default function PathFinder(){
       else if(algorithm === "Jump-Point"){
         [visited, path] = jumpPointSearch(grid, startPos.current, finishPos.current);
       }
-      animateVisited(visited, path, () => {
-        animateShortestPath(path);
-        setStatus("none");
-      });
+
+      if (algorithm === "Jump-Point"){
+        animatePrune(visited, path, () => {
+          animateJump(path);
+          setStatus("none");
+        });
+      }
+      
+  
+      else{
+        animateVisited(visited, path, () => {
+          animateShortestPath(path);
+          setStatus("none");
+        });
+      }
       if (path.length === 0)
         M.toast({html: 'No path found!', classes: 'rounded'})
     };
@@ -249,16 +320,20 @@ export default function PathFinder(){
             ))}
           </tbody>
         </table>
+        <div className="canvas-container">
+          <canvas id="canvas" width={windowWidth.current} height={windowHeight.current * 0.90}></canvas>
+        </div>
       </div>
       </>
     );
 }
 
+
 function getPoint(width, height, nodeType){
   let colNumber = Math.floor(width.current / 25);
   let rowNumber = Math.floor(height.current / 25) * 0.8;
   if (nodeType === "finish")
-  return {row: Math.ceil(rowNumber / 2), col: Math.ceil(colNumber / 1.5) }
+    return {row: Math.ceil(rowNumber / 2), col: Math.ceil(colNumber / 1.5) }
   else
     return {row: Math.ceil(rowNumber / 2), col: Math.ceil(colNumber / 6) }
 }
