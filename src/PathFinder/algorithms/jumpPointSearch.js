@@ -6,7 +6,7 @@ const toVisit = new utils.PriorityQueue((a, b) => a.f - b.f);
 var MAX_ROW = 0;
 var MAX_COL = 0;
 var FINISH_POS = null;
-const calculated = [];
+const expanded = [];
 const visited = [];
 
 
@@ -16,8 +16,9 @@ function addToVisit(grid, pos){
         var yPos = pos[1];
         var currNode = grid[xPos][yPos];
         currNode.f = utils.getEcludianDistance(currNode, FINISH_POS);
-        //console.log("adding", currNode);
+        console.log("adding toVisit", currNode);
         toVisit.enqueue(currNode);
+    
         if (xPos === FINISH_POS.row && yPos === FINISH_POS.col) {
             return true;
           }
@@ -29,7 +30,6 @@ export default function jumpPointSearch(grid, startPos, finishPos){
     MAX_ROW = grid.length;
     MAX_COL = grid[0].length;
     FINISH_POS = finishPos;
-    console.log("first", FINISH_POS);
     let [distances, paths] = utils.getInitialDistances(grid, startPos);
     grid[startPos.row][startPos.col].g = 0;
     grid[startPos.row][startPos.col].f = utils.getEcludianDistance(grid[startPos.row][startPos.col], grid[finishPos.row][finishPos.col]);
@@ -79,11 +79,14 @@ function straightPrune(grid, startNode, stepX, stepY){
         currNode = grid[newRow][newCol];
         if (currNode.nodeType === "wall") return undefined;
         console.log("Straight Prune=>", [newRow, newCol], stepX, stepY);
-        //visited.push(currNode);
         if (newRow === FINISH_POS.row && newCol === FINISH_POS.col){
             console.log("found finish");
             return [newRow, newCol];
         }
+        if (expanded.includes(currNode)){
+            return;
+        }
+        expanded.push(currNode);
         
         // forced neighbor checking
         if (stepX == 0){
@@ -130,11 +133,14 @@ function diagonalPrune(grid, startNode, stepX, stepY){
             currNode = grid[newRow][newCol];
             if (currNode.nodeType === "wall") return undefined;
             console.log("Vertical Prune=>", [newRow, newCol], stepX, stepY);
-            //visited.push(currNode);
             if (newRow === FINISH_POS.row && newCol === FINISH_POS.col){
                 console.log("found finish");
                 return [newRow, newCol];
             }
+            if (expanded.includes(currNode)){
+                return;
+            }
+            expanded.push(currNode);
         // forced neighbor checking
         if (grid[newRow + stepX]?.[newCol]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol + stepY]?.nodeType !== "wall"){
             console.log("diag1 returning", [newRow + stepX, newCol + stepY]);

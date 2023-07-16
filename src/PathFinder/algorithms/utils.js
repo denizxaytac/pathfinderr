@@ -13,6 +13,14 @@ export class PriorityQueue {
     isEmpty(){
         return this.queue.length === 0;
     }
+    has (item){
+        if (this.queue.includes(item)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
 
 // the order of getting neighbors, adjacents array in this case
