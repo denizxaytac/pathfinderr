@@ -2,7 +2,7 @@
 export default function randomStair(grid, startPos, finishPos){
     let newGrid = [...grid];
     let maxRow = grid.length;
-    let maxCol = grid[0].length;
+    //let maxCol = grid[0].length;
     let rowIdx = maxRow - 1;
     let colIdx = 0;
     while (rowIdx > 0){

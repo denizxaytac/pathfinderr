@@ -100,8 +100,9 @@ export default function PathFinder(){
 
     function handleMazeSelect(maze) {
       if (maze === "randomized-prim"){
-        randomizedPrim(grid, startPos.current, finishPos.current);
-        
+        const newGrid = randomizedPrim(grid, startPos.current, finishPos.current);
+        setGrid([...newGrid]);
+
       }
       else if (maze === "recursive-division"){
         const newGrid = recursiveDivision(grid, startPos.current, finishPos.current);
@@ -183,10 +184,11 @@ export default function PathFinder(){
 
       var node = document.getElementById("0-0");
       var elementRef = node.getBoundingClientRect();
-      const left = elementRef.left;
+      //const left = elementRef.left; not used for now
       const top = elementRef.top;
       var idx = 0;
-      var currNodeIndex = path[idx].row + '-' + path[idx].col;
+      console.log("the path is", path);
+      var currNodeIndex = path[idx]?.row + '-' + path[idx]?.col;
       var currNode = document.getElementById(currNodeIndex);
       while (idx < path.length){
         var startElementRef = currNode.getBoundingClientRect();

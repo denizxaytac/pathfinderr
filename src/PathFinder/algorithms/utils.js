@@ -87,6 +87,17 @@ export function reconstructPath(pathArray, startPos, finishPos) {
     return path.reverse();
 }
 
+export function reconstructPathJPS(pathArray, finishPos) {
+    const path = [];
+    path.push(finishPos);
+    let curr_node = pathArray[finishPos.row][finishPos.col];
+    while (curr_node !== undefined) {
+        path.push(curr_node);
+        curr_node = pathArray[curr_node.row][curr_node.col];
+    }
+    return path.reverse();
+}
+
 export function getManhattanDistance(node1, node2) {
     const dx = Math.abs(node1.col - node2.col);
     const dy = Math.abs(node1.row - node2.row);

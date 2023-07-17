@@ -83,13 +83,13 @@ function createVerticalWall(grid, startX, yPos, length){
 function hasAdjacentWall(grid, randomX, randomY, orientation, wallStartPos, wallEndPos){
     if (orientation === "vertical"){
         for (let xPos = wallStartPos; xPos < wallEndPos; xPos++){
-            if (grid[xPos][randomY + 1]?.nodeType === "wall" || (randomY != 0 && grid[xPos][randomY - 1].nodeType == "wall"))
+            if (grid[xPos][randomY + 1]?.nodeType === "wall" || (randomY !== 0 && grid[xPos][randomY - 1].nodeType === "wall"))
                 return true;
         }
     }
     if (orientation === "horizontal"){
         for (let yPos = wallStartPos; yPos <= wallEndPos; yPos++){
-            if (grid[randomX + 1]?.[yPos].nodeType === "wall" || (randomX != 0 && grid[randomX - 1][yPos].nodeType == "wall"))
+            if (grid[randomX + 1]?.[yPos].nodeType === "wall" || (randomX !== 0 && grid[randomX - 1][yPos].nodeType === "wall"))
                 return true;
         }
     }
