@@ -47,6 +47,7 @@ export default function jumpPointSearch(grid, startPos, finishPos){
     while (!toVisit.isEmpty()){
         let currNode = toVisit.dequeue();
         visited.push(currNode);
+        console.log(currNode);
         if (currNode.nodeType === "finish")
             return [expanded, utils.reconstructPathJPS(paths, grid[finishPos.row][finishPos.col]), true];
         
@@ -80,7 +81,7 @@ function straightPrune(grid, startNode, stepX, stepY){
         currNode = grid[newRow][newCol];
         currNode.g = startNode.g + 1;
         if (currNode.nodeType === "wall") return false;
-        //console.log("Straight Prune=>", [newRow, newCol], stepX, stepY);
+        console.log("Straight Prune=>", [newRow, newCol], stepX, stepY);
         if (currNode.nodeType === "finish"){
             addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
             return true;
@@ -90,34 +91,11 @@ function straightPrune(grid, startNode, stepX, stepY){
         }
         expanded.push(currNode);
         
-        // forced neighbor checking
-        if (stepX === 0){
-            // check for below
-            if (grid[newRow + 1]?.[newCol]?.nodeType === "wall" && grid[newRow + 1]?.[newCol + stepY]?.nodeType !== "wall"){
-                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
-                return true;
-
-            }
-            // check for above
-            if (grid[newRow - 1]?.[newCol]?.nodeType === "wall" && grid[newRow - 1][newCol + stepY]?.nodeType !== "wall"){
-                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
-                return true;
-            }
+        if (cardinalForcedNeighborCheck(grid, currNode, stepX, stepY)){
+            addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
+            return true;
+        }
             
-        }
-        else if (stepY === 0){
-            // check for right
-            if (grid[newRow]?.[newCol + 1]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol + 1]?.nodeType !== "wall"){
-                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
-                return true;
-            }
-            // check for left
-            if (grid[newRow]?.[newCol - 1]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol - 1]?.nodeType !== "wall"){
-                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
-                return true;
-
-            }
-        }
         
     }
 }
@@ -137,7 +115,7 @@ function diagonalPrune(grid, startNode, stepX, stepY){
             currNode = grid[newRow][newCol];
             currNode.g = startNode.g + 1;
             if (currNode.nodeType === "wall") return false;
-            //console.log("Vertical Prune=>", [newRow, newCol], stepX, stepY);
+            console.log("Vertical Prune=>", [newRow, newCol], stepX, stepY);
             if (currNode.nodeType === "finish"){
                 console.log("found finish");
                 addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
@@ -154,6 +132,10 @@ function diagonalPrune(grid, startNode, stepX, stepY){
         }
         else{
             verticalPrune = straightPrune(grid, grid[newRow][newCol], stepX, 0);
+            if (cardinalForcedNeighborCheck(grid, currNode, stepX, 0)){
+                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
+                verticalPrune = true;
+            }
         }
         if (grid[newRow]?.[newCol + stepY]?.nodeType === "wall" && grid[newRow + stepX]?.[newCol + stepY]?.nodeType !== "wall"){
             addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
@@ -161,9 +143,39 @@ function diagonalPrune(grid, startNode, stepX, stepY){
         }
         else{
             horizontalPrune = straightPrune(grid, grid[newRow][newCol], 0, stepY);
+            if (cardinalForcedNeighborCheck(grid, currNode, 0, stepY)){
+                addToVisit(grid, startNode.row, startNode.col, currNode.row, currNode.col);
+                horizontalPrune = true;
+            }
         }
         if (horizontalPrune || verticalPrune){
             return true;
         }
     }
+}
+
+
+function cardinalForcedNeighborCheck(grid, currNode, stepX, stepY){
+    if (stepX === 0){
+       // check for below
+        if (grid[currNode.row + 1]?.[currNode.col]?.nodeType === "wall" && grid[currNode.row + 1]?.[currNode.col + stepY]?.nodeType !== "wall"){
+            return true;
+        }
+        // check for above
+        if (grid[currNode.row - 1]?.[currNode.col]?.nodeType === "wall" && grid[currNode.row - 1][currNode.col + stepY]?.nodeType !== "wall"){
+            return true;
+        }
+        
+    }
+    else if (stepY === 0){
+        // check for right
+        if (grid[currNode.row]?.[currNode.col + 1]?.nodeType === "wall" && grid[currNode.row + stepX]?.[currNode.col + 1]?.nodeType !== "wall"){
+            return true;
+        }
+        // check for left
+        if (grid[currNode.row]?.[currNode.col - 1]?.nodeType === "wall" && grid[currNode.row + stepX]?.[currNode.col - 1]?.nodeType !== "wall"){
+            return true;
+        }
+    }
+    return false;
 }

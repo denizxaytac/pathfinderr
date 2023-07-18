@@ -34,6 +34,7 @@ export default function PathFinder(){
     }, []);
 
     const drawNode = useCallback((row, col, nodeType) => {
+      console.log(row, col);
       if (nodeType === "start" || nodeType === "finish" || nodeType === "visited" || nodeType === "shortestPath") return;
       setGrid(grid => {
         const newGrid = [...grid];
@@ -340,3 +341,6 @@ function getPoint(width, height, nodeType){
   else
     return {row: Math.ceil(rowNumber / 2), col: Math.ceil(colNumber / 6) }
 }
+
+
+  
