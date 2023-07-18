@@ -17,7 +17,7 @@ class Node {
 
 export default function getEmptyGrid(width, height, startPos, finishPos){
     let colNumber = Math.floor(width.current / 24);
-    let rowNumber = Math.floor(height.current / 25) * 0.87;
+    let rowNumber = Math.floor(height.current / 25) * 0.92;
     let grid = [];
     for (let rowIdx = 0; rowIdx < rowNumber; rowIdx++){
         let row = [];

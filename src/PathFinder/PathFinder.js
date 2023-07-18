@@ -305,7 +305,7 @@ export default function PathFinder(){
         <table>
           <tbody>
             {grid.map((row, rowIdx) => (
-              <tr key={rowIdx}>
+              <tr key={rowIdx} style={{borderBottom: "none"}}>
                 {row.map((item, colIdx) => (
                     <MyNode
                       key={`${rowIdx}-${colIdx}`}

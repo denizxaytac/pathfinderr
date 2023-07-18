@@ -20,10 +20,10 @@ export default function ToolBar({handleAlgorithmSelect, handleMazeSelect, handle
       }, [status]);
 
     return (
-    <div className="container-full">
+    <div className="container">
         <div className="row center">
         <div className="col s3">
-            <a className='dropdown-trigger btn' href='#!' data-target='dropdown1'>Select an algorithm</a>
+            <a className='dropdown-trigger blue accent-1 btn btn-small' href='#!' data-target='dropdown1'>Select an algorithm </a>
             <ul id='dropdown1' className='dropdown-content'>
                 <li><a onClick={() => setAlgorithm("Djikstra")}>Djikstra</a></li>
                 <li><a onClick={() => setAlgorithm("A* Star")}>A* Star</a></li>
@@ -33,13 +33,7 @@ export default function ToolBar({handleAlgorithmSelect, handleMazeSelect, handle
             </ul>
         </div>
         <div className="col s3">
-            <a className={`waves-effect waves-light btn ${buttonState}`} onClick={handleStart}>{startText}</a>
-        </div>
-        <div className="col s2">
-            <a className={`waves-effect waves-light btn ${buttonState}`} onClick={handleReset}>Clear maze</a>
-        </div>
-        <div className="col s2">
-            <a className={`dropdown-trigger btn ${buttonState}`} href='#!' data-target='dropdown2'>Select maze</a>
+            <a className={`dropdown-trigger blue accent-1 btn btn-small ${buttonState}`} href='#!' data-target='dropdown2'>Select maze</a>
                 <ul id='dropdown2' className='dropdown-content'>
                     <li><a className={`${buttonState}`} onClick={() => handleMazeSelect("randomized-prim")}>Randomized Prim</a></li>
                     <li><a className={`${buttonState}`} onClick={() => handleMazeSelect("recursive-division")}>Recursive Division</a></li>
@@ -47,6 +41,12 @@ export default function ToolBar({handleAlgorithmSelect, handleMazeSelect, handle
                     <li><a className={`${buttonState}`} onClick={() => handleMazeSelect("random-weight")}>Weight maze</a></li>
                     <li><a className={`${buttonState}`} onClick={() => handleMazeSelect("random-stair")}>Stair maze</a></li>
                 </ul>
+        </div>
+        <div className="col s3">
+            <a className={`waves-effect blue accent-1 btn btn-small ${buttonState}`} onClick={handleReset}>Clear maze</a>
+        </div>
+        <div className="col s3">
+            <a className={`waves-effect blue darken-3 btn btn-small ${buttonState}`} onClick={handleStart}>{startText}</a>
         </div>
         </div>
     </div>
