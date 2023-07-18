@@ -27,6 +27,7 @@ function addToVisit(grid, xPos, yPos, xPos2, yPos2){
         nextNode.f = currNode.f +1;
         toVisit.enqueue(nextNode);
     }
+    toVisit.enqueue(currNode);
     visited.push(currNode);
 }
 
@@ -41,42 +42,29 @@ export default function jumpPointSearch(grid, startPos, finishPos){
     grid[startPos.row][startPos.col].g = 0;
     grid[startPos.row][startPos.col].f = utils.getEcludianDistance(grid[startPos.row][startPos.col], grid[finishPos.row][finishPos.col]);
     toVisit.enqueue(grid[startPos.row][startPos.col]);
-    var steps = [[-1, 0], [0, -1], [1, 0], [0, 1], [-1, -1], [1, -1], [1, 1], [-1, 1]];
+    var steps = [[-1, 0], [0, 1], [1, 0], [0, -1], [-1, -1], [-1, 1], [1, 1], [1, -1]];
     var stepIdx = 0;
-    var cycle = 0;
     while (!toVisit.isEmpty()){
-        cycle = 0;
         let currNode = toVisit.dequeue();
         visited.push(currNode);
-        console.log("Current node", currNode);
-        if (currNode.nodeType === "finish"){
-            return [expanded, utils.reconstructPathJPS(paths, grid[finishPos.row][finishPos.col])];
-        }
+        if (currNode.nodeType === "finish")
+            return [expanded, utils.reconstructPathJPS(paths, grid[finishPos.row][finishPos.col]), true];
+        
 
-        // horizontal/vertical pruning
         var foundJumpPoint = false;
-        while (true){
-            if (steps[stepIdx][0] === 0 || steps[stepIdx][1] === 0){
+        stepIdx = 0;
+        while (stepIdx < 7){
+            if (steps[stepIdx][0] === 0 || steps[stepIdx][1] === 0)
                 foundJumpPoint = straightPrune(grid, currNode, steps[stepIdx][0], steps[stepIdx][1]);
-            }
-            else{
+            else
                 foundJumpPoint = diagonalPrune(grid, currNode, steps[stepIdx][0], steps[stepIdx][1]);
-            }
-            if (foundJumpPoint){
-                console.log("Jump point found");
+
+            if (foundJumpPoint)
                 break;
-            }
-            else{
-                stepIdx += 1;
-                if (stepIdx > 7){
-                    stepIdx = 0;
-                    break;
-                }
-            }
-            cycle += 1;
+            stepIdx += 1;
         }
     }
-    return [expanded, []];
+    return [expanded, visited, false];
 }
 
 function straightPrune(grid, startNode, stepX, stepY){

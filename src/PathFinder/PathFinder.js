@@ -258,6 +258,7 @@ export default function PathFinder(){
       clearProgress();
       let visited = [];
       let path = [];
+      var foundPath = false;
       if (algorithm === "Djikstra") {
         [visited, path] = djikstra(grid, startPos.current, finishPos.current);
       }
@@ -271,12 +272,12 @@ export default function PathFinder(){
         [visited, path] = breadthFirst(grid, startPos.current, finishPos.current);
       }
       else if(algorithm === "Jump-Point"){
-        [visited, path] = jumpPointSearch(grid, startPos.current, finishPos.current);
+        [visited, path, foundPath] = jumpPointSearch(grid, startPos.current, finishPos.current);
       }
 
       if (algorithm === "Jump-Point"){
         animatePrune(visited, path, () => {
-          animateJump(path);
+          if (foundPath) animateJump(path);
           setStatus("none");
         });
       }
