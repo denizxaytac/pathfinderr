@@ -8,7 +8,7 @@ export class PriorityQueue {
       this.queue.sort(this.compare);
     }
     dequeue() {
-      return this.queue.shift();
+        return this.queue.shift();
     }
     isEmpty(){
         return this.queue.length === 0;
@@ -20,6 +20,14 @@ export class PriorityQueue {
         else{
             return false;
         }
+    }
+    peekLastItem(){
+        return this.queue[this.queue.length - 1];
+    }
+    removeElement(element){
+        const index = this.queue.indexOf(element);
+        this.queue.splice(index, 1);
+        this.queue.sort(this.compare);
     }
 }
 
@@ -92,8 +100,21 @@ export function reconstructPathJPS(pathArray, finishPos) {
     path.push(finishPos);
     let curr_node = pathArray[finishPos.row][finishPos.col];
     while (curr_node !== undefined) {
+        if (path.includes(curr_node)) break;
         path.push(curr_node);
         curr_node = pathArray[curr_node.row][curr_node.col];
+    }
+    return path.reverse();
+}
+
+export function reconstructPathJPS2(finishNode) {
+    console.log("im here");
+    const path = [];
+    path.push(finishNode);
+    let curr_node = finishNode.parent;
+    while (curr_node !== undefined) {
+        path.push(curr_node);
+        curr_node = curr_node.parent;
     }
     return path.reverse();
 }

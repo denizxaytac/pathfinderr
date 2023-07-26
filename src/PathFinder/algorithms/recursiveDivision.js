@@ -66,7 +66,8 @@ function createHorizontalWall(grid, xPos, startY, length){
         grid[xPos][newY].nodeType = "wall";
     }
     let randomIdx = utils.randomRange(startY, length);
-    grid[xPos][randomIdx].nodeType = "normal";
+    if (grid[xPos][randomIdx].nodeType === "wall")
+        grid[xPos][randomIdx].nodeType = "normal";
     horizontalDoors.push([xPos, randomIdx]);
 }
 
@@ -76,7 +77,8 @@ function createVerticalWall(grid, startX, yPos, length){
         grid[newX][yPos].nodeType = "wall";
     }
     let randomIdx = utils.randomRange(startX, length)
-    grid[randomIdx][yPos].nodeType = "normal";
+    if (grid[randomIdx][yPos].nodeType === "wall")
+        grid[randomIdx][yPos].nodeType = "normal";
     verticalDoors.push([randomIdx, yPos]);
 }
   

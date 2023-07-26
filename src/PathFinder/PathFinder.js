@@ -100,27 +100,28 @@ export default function PathFinder(){
 
 
     function handleMazeSelect(maze) {
+      var emptyGrid = getEmptyGrid(windowWidth, windowHeight, startPos, finishPos);
       if (maze === "randomized-prim"){
-        const newGrid = randomizedPrim(grid, startPos.current, finishPos.current);
+        const newGrid = randomizedPrim(emptyGrid, startPos.current, finishPos.current);
         setGrid([...newGrid]);
 
       }
       else if (maze === "recursive-division"){
-        const newGrid = recursiveDivision(grid, startPos.current, finishPos.current);
+        const newGrid = recursiveDivision(emptyGrid, startPos.current, finishPos.current);
         setGrid([...newGrid]);
       }
       else if (maze==="random-wall"){
-        const newGrid = randomWalls(grid);
+        const newGrid = randomWalls(emptyGrid);
         setGrid([...newGrid]);
 
       }
       else if (maze==="random-weight"){
-        const newGrid = randomWeights(grid);
+        const newGrid = randomWeights(emptyGrid);
         setGrid([...newGrid]);
 
       }
       else if (maze==="random-stair"){
-        const newGrid = randomStair(grid, startPos.current, finishPos.current);
+        const newGrid = randomStair(emptyGrid, startPos.current, finishPos.current);
         setGrid([...newGrid]);
       }
     };
