@@ -10,6 +10,11 @@ export class PriorityQueue {
     dequeue() {
         return this.queue.shift();
     }
+
+    length() {
+        return this.queue.length;
+    }
+
     isEmpty(){
         return this.queue.length === 0;
     }
@@ -102,6 +107,7 @@ export function reconstructPathJPS(pathArray, finishPos) {
     while (curr_node !== undefined) {
         if (path.includes(curr_node)) break;
         path.push(curr_node);
+        if (curr_node.nodeType === "start") break;
         curr_node = pathArray[curr_node.row][curr_node.col];
     }
     return path.reverse();

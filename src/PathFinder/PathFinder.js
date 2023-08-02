@@ -99,8 +99,9 @@ export default function PathFinder(){
     };
 
 
-    function handleMazeSelect(maze) {
+    const handleMazeSelect = (maze) => {
       var emptyGrid = getEmptyGrid(windowWidth, windowHeight, startPos, finishPos);
+      clearProgress();
       if (maze === "randomized-prim"){
         const newGrid = randomizedPrim(emptyGrid, startPos.current, finishPos.current);
         setGrid([...newGrid]);
@@ -230,6 +231,7 @@ export default function PathFinder(){
   
     const handleReset = () => {
       if (status === "running") return;
+      clearProgress();
       const newGrid = getEmptyGrid(windowWidth, windowHeight, startPos, finishPos);
       setGrid([...newGrid]);
     };
